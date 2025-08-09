@@ -68,7 +68,7 @@ export default function LoginPage() {
             </div>
              <div className="text-center">
                 <Button variant="link" className="text-pink-500 hover:text-pink-600 dark:text-pink-400 dark:hover:text-pink-500">
-                  Don't have an account? Create one
+                  Don&apos;t have an account? Create one
                 </Button>
               </div>
           </form>

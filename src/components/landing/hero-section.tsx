@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import {
   Select,
   SelectContent,
@@ -10,8 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { generateDateIdea } from "@/lib/emojis";
-import { createClient } from "@/lib/supabase/client";
 import { Check, Copy, Twitter, Facebook, Instagram } from 'lucide-react';
 
 const dateTypes = {
@@ -23,7 +20,6 @@ const dateTypes = {
 type DateLength = keyof typeof dateTypes;
 
 export function HeroSection() {
-  const supabase = createClient();
   const [dateLength, setDateLength] = useState<DateLength>('3');
   const [currentEmojis, setCurrentEmojis] = useState('');
   const [currentDescription, setCurrentDescription] = useState('Your next adventure starts here...');
@@ -62,7 +58,7 @@ export function HeroSection() {
         .then(res => res.ok ? res.json() : Promise.reject())
         .then(data => setDateCount(data.count))
         .catch(() => setDateCount(null));
-    } catch (e) {
+    } catch {
       setErrorMsg('Network error. Please try again.');
     }
   }
@@ -139,10 +135,10 @@ export function HeroSection() {
             
             <div className="text-left">
               <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2">
-                Here's an idea to get you started:
+                Here&apos;s an idea to get you started:
               </p>
               <p className="text-base text-gray-600 dark:text-gray-300 italic">
-                "{currentDescription}"
+                &ldquo;{currentDescription}&rdquo;
               </p>
             </div>
 
