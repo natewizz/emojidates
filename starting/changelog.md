@@ -1,5 +1,11 @@
 # Emojidates Changelog
 
+## YYYY-MM-DD: Initial Setup & Auth Implementation
+- **Project Scaffolding**: Initialized Next.js project with TypeScript, Tailwind CSS, and Shadcn UI.
+- **Supabase Integration**: Configured Supabase client, server, and middleware for authentication.
+- **Email/Password Auth**: Implemented and tested a fully functional login/signup flow with email and password.
+- **Next Steps**: Configure and implement social login provider (Google).
+
 ## 2024-06-10: Project Initialization
 
 ### Project Overview
@@ -26,6 +32,19 @@
 - Set up analytics, legal docs, and compliance tools.
 - Start frontend build with mobile-first, responsive design.
 - Prepare for UGC moderation and sharing features.
+
+## 2024-06-12: Production-Grade Rate Limiting & API Refactor
+- **API Refactor:** Emoji date generation moved to a dedicated API route (`/api/generate-date`).
+- **Supabase Writes Secured:** Client-side Supabase writes removed; all generation and DB writes now go through the API.
+- **Distributed Rate Limiting:** Implemented Upstash Redis-based rate limiting in middleware for `/api/generate-date`.
+  - Limits: 10 requests per minute per IP and per authenticated user.
+  - Clever, date-themed error messages for rate limit violations.
+- **Ready for Production:** Solution is serverless-friendly and works across multiple instances/environments.
+
+## 2024-06-12: Facebook Share Message Attempt (Not Supported)
+- **Attempted Feature:** Tried to prefill Facebook shares with a custom message using the 'quote' parameter.
+- **Technical Limitation:** Facebook does not reliably honor the 'quote' parameter for all domains; only the link preview (from OG tags) is shown.
+- **Decision:** Skipped this feature for now. Facebook shares will only display the link preview as defined by Open Graph tags.
 
 ---
 
@@ -84,8 +103,8 @@ This document records the key architectural and technical decisions for the Emoj
 *   **Security Model**: **Row-Level Security (RLS)**
     *   **Reasoning**: Supabase's native RLS allows for creating powerful, declarative security rules that restrict data access to the authenticated user. This is a highly secure and scalable approach compared to manual security logic.
 
-*   **Implementation Library**: **`@supabase/auth-helpers-nextjs`**
-    *   **Reasoning**: The official helper library simplifies session management and data fetching within Next.js, supporting Server Components and providing a straightforward developer experience for connecting the frontend to Supabase. 
+*   **Implementation Library**: **`@supabase/ssr`**
+    *   **Reasoning**: The official Supabase server-side rendering library simplifies session management and data fetching within Next.js, supporting Server Components and providing a straightforward developer experience for connecting the frontend to Supabase. 
 
 ---
 
