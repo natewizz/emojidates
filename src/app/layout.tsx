@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 
@@ -6,6 +6,14 @@ const geist = Geist({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: "#ec4899", // Pink theme color
+  colorScheme: "light dark",
+};
 
 export const metadata: Metadata = {
   title: "EmojiDates - Generate Creative Date Ideas with Emojis",
@@ -49,24 +57,11 @@ export const metadata: Metadata = {
     images: ["https://emojidates.com/og-image.jpg"],
   },
   icons: {
-    icon: [
-      {
-        url: "/favicon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: [
-      {
-        url: "/apple-touch-icon.svg",
-        sizes: "180x180",
-        type: "image/svg+xml",
-      },
-    ],
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/apple-touch-icon.svg",
   },
   manifest: "/site.webmanifest",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
-  themeColor: "#ec4899", // Pink theme color
-  colorScheme: "light dark",
 };
 
 export default function RootLayout({
