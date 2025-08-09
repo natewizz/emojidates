@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Select,
   SelectContent,
@@ -27,9 +27,8 @@ export function HeroSection() {
   const [isCopied, setIsCopied] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [dateCount, setDateCount] = useState<number | null>(null);
 
-  async function handleGenerate() {
+  const handleGenerate = useCallback(async () => {
     setErrorMsg('');
     setIsCopied(false);
     setShareUrl('');
@@ -53,25 +52,14 @@ export function HeroSection() {
       setCurrentDescription(data.description);
       setCurrentDateId(data.id);
       setShareUrl(`${window.location.origin}/date/${data.id}`);
-      // Refresh the counter after a new date is created
-      fetch('/api/generate-date')
-        .then(res => res.ok ? res.json() : Promise.reject())
-        .then(data => setDateCount(data.count))
-        .catch(() => setDateCount(null));
     } catch {
       setErrorMsg('Network error. Please try again.');
     }
-  }
+  }, [dateLength]);
 
   useEffect(() => {
     handleGenerate();
-    // Fetch unique date count
-    fetch('/api/generate-date')
-      .then(res => res.ok ? res.json() : Promise.reject())
-      .then(data => setDateCount(data.count))
-      .catch(() => setDateCount(null));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleGenerate]);
 
   const handleCopy = () => {
     if (!shareUrl) return;
@@ -79,20 +67,15 @@ export function HeroSection() {
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };
-  
+
   const shareText = `I just created a date with these emojis: ${currentEmojis}. See what it is! #emojidates`;
   const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
   const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+  const instagramShareUrl = `https://www.instagram.com/?url=${encodeURIComponent(shareUrl)}&caption=${encodeURIComponent(shareText)}`;
+
   return (
     <section className="py-20 md:py-32 bg-gradient-to-br from-pink-100 to-rose-200 dark:from-gray-900 dark:to-slate-800">
       <div className="container mx-auto text-center px-4">
-        {dateCount !== null && (
-          <div className="mb-8">
-            <div className="inline-block px-6 py-3 rounded-full bg-pink-100 dark:bg-pink-900/60 shadow text-2xl font-extrabold text-pink-600 dark:text-pink-200 border-2 border-pink-200 dark:border-pink-700">
-              {dateCount.toLocaleString()} unique dates created so far!
-            </div>
-          </div>
-        )}
         <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter text-gray-800 dark:text-gray-100">
           Unforgettable Dates, One Emoji at a Time <span role="img" aria-label="couple-with-heart">💕</span>
         </h1>
@@ -142,25 +125,21 @@ export function HeroSection() {
               </p>
             </div>
 
-            {currentDateId ? (
-                <div className="mt-8">
-                    <Button onClick={handleCopy} className="w-full bg-pink-500 hover:bg-pink-600 text-white dark:bg-pink-600 dark:hover:bg-pink-700" size="lg">
-                        {isCopied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
-                        {isCopied ? 'Copied!' : 'Copy Link'}
-                    </Button>
-                    <div className="mt-4 text-center">
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Share This Date!</p>
-                        <div className="flex justify-center gap-4">
-                            <a href={twitterShareUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-500 dark:text-gray-400 dark:hover:text-pink-500 transition-colors"><Twitter /></a>
-                            <a href={facebookShareUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-500 dark:text-gray-400 dark:hover:text-pink-500 transition-colors"><Facebook /></a>
-                            <a href="#" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-500 dark:text-gray-400 dark:hover:text-pink-500 transition-colors"><Instagram /></a>
-                        </div>
-                    </div>
-                </div>
-            ) : (
-                <Button variant="outline" className="mt-8 dark:text-gray-400 dark:border-gray-700" disabled>
-                    Generating Link...
+            {currentDateId && (
+              <div className="mt-8">
+                <Button onClick={handleCopy} className="w-full bg-pink-500 hover:bg-pink-600 text-white dark:bg-pink-600 dark:hover:bg-pink-700" size="lg">
+                  {isCopied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+                  {isCopied ? 'Copied!' : 'Copy Link'}
                 </Button>
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Share This Date!</p>
+                  <div className="flex justify-center gap-4">
+                    <a href={twitterShareUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-500 dark:text-gray-400 dark:hover:text-pink-500 transition-colors"><Twitter /></a>
+                    <a href={facebookShareUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-500 dark:text-gray-400 dark:hover:text-pink-500 transition-colors"><Facebook /></a>
+                    <a href={instagramShareUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-500 dark:text-gray-400 dark:hover:text-pink-500 transition-colors"><Instagram /></a>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         )}
