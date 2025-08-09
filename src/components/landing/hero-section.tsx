@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Check, Share2 } from 'lucide-react';
+import { Check, Copy, Twitter, Facebook, Instagram } from 'lucide-react';
 
 const dateTypes = {
   '3': { name: 'Quick Date' },
@@ -68,6 +68,11 @@ export function HeroSection() {
     setTimeout(() => setIsCopied(false), 2000);
   };
 
+  const shareText = `I just created a date with these emojis: ${currentEmojis}. See what it is! #emojidates`;
+  const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareText)}`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+  const instagramShareUrl = `https://www.instagram.com/?url=${encodeURIComponent(shareUrl)}&caption=${encodeURIComponent(shareText)}`;
+
   return (
     <section className="py-20 md:py-32 bg-gradient-to-br from-pink-100 to-rose-200 dark:from-gray-900 dark:to-slate-800">
       <div className="container mx-auto text-center px-4">
@@ -123,9 +128,17 @@ export function HeroSection() {
             {currentDateId && (
               <div className="mt-8">
                 <Button onClick={handleCopy} className="w-full bg-pink-500 hover:bg-pink-600 text-white dark:bg-pink-600 dark:hover:bg-pink-700" size="lg">
-                  {isCopied ? <Check className="mr-2 h-4 w-4" /> : <Share2 className="mr-2 h-4 w-4" />}
-                  {isCopied ? 'Copied!' : 'Copy & Share'}
+                  {isCopied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+                  {isCopied ? 'Copied!' : 'Copy Link'}
                 </Button>
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">Share This Date!</p>
+                  <div className="flex justify-center gap-4">
+                    <a href={twitterShareUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-500 dark:text-gray-400 dark:hover:text-pink-500 transition-colors"><Twitter /></a>
+                    <a href={facebookShareUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-500 dark:text-gray-400 dark:hover:text-pink-500 transition-colors"><Facebook /></a>
+                    <a href={instagramShareUrl} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-500 dark:text-gray-400 dark:hover:text-pink-500 transition-colors"><Instagram /></a>
+                  </div>
+                </div>
               </div>
             )}
           </div>
