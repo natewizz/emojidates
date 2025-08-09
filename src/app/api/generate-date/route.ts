@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
     return NextResponse.json({ id: data.id, emojis, description });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
@@ -38,7 +38,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
     return NextResponse.json({ count });
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 } 

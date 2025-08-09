@@ -3,14 +3,14 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 // This function can be uncommented and used with a more robust cache handling strategy
 // export const revalidate = 3600; // Revalidate every hour
 
 async function getDateData(id: string) {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     const { data, error } = await supabase
         .from('dates')
@@ -25,9 +25,8 @@ async function getDateData(id: string) {
     return data;
 }
 
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = params;
+  const { id } = await params;
   const { emojis, description } = await getDateData(id);
 
   const siteUrl = process.env.VERCEL_URL 
@@ -61,7 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function DatePage({ params }: Props) {
-    const { id } = params;
+    const { id } = await params;
     const { emojis, description } = await getDateData(id);
 
     return (
@@ -72,7 +71,7 @@ export default async function DatePage({ params }: Props) {
                 </div>
                 <div className="my-6 border-t border-gray-200 dark:border-gray-700"></div>
                 <p className="text-lg text-gray-600 dark:text-gray-300 italic">
-                    "{description}"
+                    &ldquo;{description}&rdquo;
                 </p>
             </div>
         </div>
